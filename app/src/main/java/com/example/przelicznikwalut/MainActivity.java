@@ -1,5 +1,6 @@
 package com.example.przelicznikwalut;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -46,6 +47,11 @@ public class MainActivity extends AppCompatActivity {
         toCurrencySpinner = findViewById(R.id.toCurrencySpinner);
         convertButton = findViewById(R.id.convertButton);
         resultText = findViewById(R.id.resultText);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("WALUTY",MODE_PRIVATE);
+
+        fromCurrencySpinner.setSelection(sharedPreferences.getInt("Z_WALUTA",0));
+        toCurrencySpinner.setSelection(sharedPreferences.getInt("DO_WALUTA",0));
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, currencies);
@@ -113,5 +119,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         resultText.setText(String.format("%.2f", result) + " " + toCurrencyInfo);
+
+        SharedPreferences.Editor editor = getSharedPreferences("WALUTY",MODE_PRIVATE).edit();
+
+        editor.putInt("Z_WALUTA",fromCurrencySpinner.getSelectedItemPosition());
+        editor.putInt("DO_WALUTA",toCurrencySpinner.getSelectedItemPosition());
+
+        editor.apply();
     }
 }
