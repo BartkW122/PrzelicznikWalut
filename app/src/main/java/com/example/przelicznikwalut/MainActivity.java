@@ -2,7 +2,11 @@ package com.example.przelicznikwalut;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -36,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private  static  final  double PLN_TO_USD = 0.27;
     private  static  final  double PLN_TO_GBP = 0.21;
 
+    private  String amountStr = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +66,31 @@ public class MainActivity extends AppCompatActivity {
         fromCurrencySpinner.setAdapter(adapter);
         toCurrencySpinner.setAdapter(adapter);
 
+
+
+        fromCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                convertCurrency();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        toCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                convertCurrency();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         convertButton.setOnClickListener(v->{
             convertCurrency();
         });
@@ -68,7 +99,23 @@ public class MainActivity extends AppCompatActivity {
     private void convertCurrency(){
         amountInput = findViewById(R.id.amountInput);
 
-        String amountStr = amountInput.getText().toString();
+        amountInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable editable) {
+                Log.d("edit",editable.toString());
+                amountStr = editable.toString();
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+        });
 
         if(amountStr.isEmpty()){
             Toast.makeText(this,"Wprowadz kwotę!!",Toast.LENGTH_LONG).show();
